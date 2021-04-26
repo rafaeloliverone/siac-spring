@@ -3,7 +3,10 @@ package com.academico.siac.controllers;
 import com.academico.siac.models.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,22 +39,23 @@ public class StudentController {
 	}
 
 	@PostMapping("/create")
-	public ModelAndView create( Student student, BindingResult bindingResult, HttpServletRequest request ){
+	public String create(@Valid Student student, Errors bindingResult, Model model ){
 		ModelAndView mv = new ModelAndView();
 
-		System.out.println(student.getBirthDate());
-		studentRepository.save(student);
-		mv.setViewName("redirect:/students/list");
-//		if (bindingResult.hasErrors()) {
-//
-//			mv.setViewName("student/create");
-//			mv.addObject("student", student);
-//		} else {
-//			System.out.println(student);
-//
-//
-//		}
-		return mv;
+		System.out.println(bindingResult.hasErrors());
+		System.out.println(bindingResult.getErrorCount());
+
+		if (bindingResult.hasErrors()) {
+			System.out.println("tem erro");
+			mv.setViewName("students/create");
+			mv.addObject("student", student);
+			return "students/create";
+		} else {
+			studentRepository.save(student);
+			mv.setViewName("redirect:/students/list");
+		}
+
+		return "redirect:/students/list";
 	}
 
 	@GetMapping("/update/{id}")
