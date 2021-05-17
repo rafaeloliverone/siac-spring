@@ -6,13 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.academico.siac.repositories.StudentRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -23,71 +21,67 @@ public class StudentController {
 	@Autowired
 	private StudentRepository studentRepository;
 
-	@GetMapping("/create")
-	public ModelAndView create() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("student/create");
-		mv.addObject("student", new Student());
-		return mv;
-	}
-
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list() {
-		ModelAndView mv = new ModelAndView("student/list");
+	//	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@GetMapping("/list")
+	public ModelAndView listView(ModelAndView mv) {
 		mv.addObject("students", studentRepository.findAll());
+		mv.setViewName("student/list");
 		return mv;
 	}
 
-	@PostMapping("/create")
-	public String create(@Valid Student student, Errors bindingResult, Model model ){
-		ModelAndView mv = new ModelAndView();
+	@GetMapping("/create")
+	public ModelAndView createView(ModelAndView mv) {
+		mv.addObject("student", new Student());
+		mv.setViewName("student/form");
+		return mv;
+	}
 
-		System.out.println(bindingResult.hasErrors());
-		System.out.println(bindingResult.getErrorCount());
-
-		if (bindingResult.hasErrors()) {
-			System.out.println("tem erro");
-			mv.setViewName("students/create");
-			mv.addObject("student", student);
-			return "students/create";
+	@PostMapping("/save")
+	public ModelAndView saveStudent(@Valid Student student, BindingResult result, ModelAndView mv) {
+		if (result.hasErrors()) {
+			mv.addObject("student", new Student());
+			mv.setViewName("student/form");
 		} else {
 			studentRepository.save(student);
 			mv.setViewName("redirect:/students/list");
 		}
 
-		return "redirect:/students/list";
+		return mv;
+	}
+
+	@PostMapping("/save/{id}")
+	public ModelAndView updateStudent(
+			@PathVariable("id") Long id,
+			@Valid Student student,
+			BindingResult result,
+			ModelAndView mv) {
+
+		if (result.hasErrors()) {
+			mv.addObject("student", student);
+			mv.setViewName("student/form");
+		} else {
+			student.setId(id);
+			studentRepository.save(student);
+			mv.setViewName("redirect:/students/list");
+		}
+
+		return mv;
 	}
 
 	@GetMapping("/update/{id}")
-	public ModelAndView alterar(@PathVariable("id") Long id) {
-		ModelAndView mv = new ModelAndView();
-		Optional<Student> student = studentRepository.findById(id);
+	public ModelAndView updateView(@PathVariable("id") Long id, ModelAndView mv) {
+		Student student = studentRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
 		mv.addObject("student", student);
-		mv.setViewName("student/update");
+		mv.setViewName("student/form");
 		return mv;
 	}
-
-	@PostMapping("/update")
-	public ModelAndView update( Student student, BindingResult bindingResult ){
-		ModelAndView mv = new ModelAndView();
-
-		mv.setViewName("redirect:/students/list");
-		studentRepository.save(student);
-
-//		if (bindingResult.hasErrors()) {
-//			mv.setViewName("tarefas/alterar");
-//			mv.addObject("tarefa", tarefa);
-//		} else {
-//
-//		}
-		return mv;
-	}
-
 
 	@GetMapping("/delete/{id}")
-	public String excluir(@PathVariable("id") Long id) {
+	public ModelAndView delete(@PathVariable("id") Long id, ModelAndView mv) {
 		studentRepository.deleteById(id);
-		return "redirect:/students/list";
+		mv.setViewName("redirect:/students/list");
+		return mv;
 	}
 	
 }

@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name="TB_Student")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
@@ -39,6 +39,13 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private SituacaoEnum situacao;
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 
     public Long getId() {
         return id;
