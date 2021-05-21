@@ -36,7 +36,11 @@ public class Student {
 
     private BigDecimal notaFinal;
 
-    @Enumerated(EnumType.STRING)
+    @Transient
+    private BigDecimal media;
+
+    // @Enumerated(EnumType.STRING)
+    @Transient
     private SituacaoEnum situacao;
 
     @Override
@@ -65,6 +69,14 @@ public class Student {
 
     public Date getBirthDate() {
         return birthDate;
+    }
+
+    public BigDecimal getMedia() {
+        return media;
+    }
+
+    public void setMedia(BigDecimal media) {
+        this.media = media;
     }
 
     public void setBirthDate(Date birthDate) {

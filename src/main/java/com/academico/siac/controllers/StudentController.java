@@ -30,6 +30,14 @@ public class StudentController {
 		return mv;
 	}
 
+	@GetMapping("/report")
+	public ModelAndView reportView(ModelAndView mv) {
+		mv.addObject("students", studentService.getAllStudentsWithGrades());
+		mv.setViewName("student/report");
+
+		return mv;
+	}
+
 	@GetMapping("/create")
 	public ModelAndView createView(ModelAndView mv) {
 		mv.addObject("student", new Student());
