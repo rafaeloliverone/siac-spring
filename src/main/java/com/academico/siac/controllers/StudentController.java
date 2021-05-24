@@ -2,6 +2,7 @@ package com.academico.siac.controllers;
 
 import com.academico.siac.models.Student;
 import com.academico.siac.services.StudentService;
+import com.academico.siac.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,9 @@ public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
+
+	@Autowired
+	private UserService userService;
 
 	//	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@GetMapping("/list")
@@ -47,7 +51,8 @@ public class StudentController {
 
 	@PostMapping("/save")
 	public ModelAndView saveOrUpdateStudent(@Valid Student student, BindingResult result, ModelAndView mv) {
-		if (result.hasErrors()) {
+		if (result.hasErrors() || !studentService.isStudentValid(student)) {
+			mv.addObject("error", "Verifique as informações inseridas");
 			mv.addObject("student", new Student());
 			mv.setViewName("student/form");
 		} else {
@@ -65,7 +70,8 @@ public class StudentController {
 			BindingResult result,
 			ModelAndView mv) {
 
-		if (result.hasErrors()) {
+		if (result.hasErrors() || !studentService.isStudentValid(student)) {
+			mv.addObject("error", "Verifique as informações inseridas");
 			mv.addObject("student", student);
 			mv.setViewName("student/form");
 		} else {
