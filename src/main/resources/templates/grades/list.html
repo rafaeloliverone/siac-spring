@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*/ <th:block th:include="fragments/base :: head"></th:block> /*/-->
+<body>
+<div class="w-100 vh-100 d-flex flex-column">
+    <div th:replace="fragments/base :: header"></div>
+    <main style="flex: 1">
+        <div class="h-100 d-flex flex-column align-items-center bg-secondary text-light">
+            <div class="mt-5 w-80">
+                <h3 class="mb-4">Listagem de Notas dos Estudantes</h3>
+                <table class="table table-striped table-bordered table-dark">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Data Nascimento</th>
+                        <th>Nota 1</th>
+                        <th>Nota 2</th>
+                        <th>Nota 3</th>
+                        <th>Nota final</th>
+                        <th>Faltas</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:if="${students.isEmpty()}">
+                        <td class="text-center" colspan="8">Nenhum estudante cadastrado</td>
+                    </tr>
+
+                    <tr th:each="student, i : ${students}">
+                        <td th:text="${student.id}"></td>
+                        <td th:text="${student.name}"></td>
+                        <td th:text="${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${student.nota1}"></td>
+                        <td th:text="${student.nota2}"></td>
+                        <td th:text="${student.nota3}"></td>
+                        <td th:text="${student.notaFinal}"></td>
+                        <td th:text="${student.faltas}"></td>
+                        <td class="d-flex justify-content-around">
+                            <a th:href="@{/grades/update/{id}(id=${student.id})}">Editar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!--/*/ <th:block th:include="fragments/base :: scripts"></th:block> /*/-->
+
+</body>
+</html>

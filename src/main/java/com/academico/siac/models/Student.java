@@ -130,4 +130,20 @@ public class Student {
     public void setSituacao(SituacaoEnum situacao) {
         this.situacao = situacao;
     }
+
+    public boolean travaFinal() {
+        if (getNota1() != null && getNota2() != null && getNota3() != null) {
+
+            if(getFaltas() != null) {
+                if(getFaltas() > 25) {
+                    return true;
+                }
+            }
+
+            double media = (getNota1().doubleValue() + getNota2().doubleValue() + getNota3().doubleValue())/3;
+
+            return (media < 4 || media >= 7);
+        }
+        return true;
+    }
 }
