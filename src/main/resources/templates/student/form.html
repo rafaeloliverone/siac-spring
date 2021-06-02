@@ -14,7 +14,7 @@
                       th:action="(${student.id} != ${null}) ? (@{/students/save/{id}(id=${student.id})}) : '/students/save'"
                       method="post" th:object="${student}">
 
-                    <th:block th:if="${error}">
+                    <th:block class="d-flex justify-content-center align-items-center" th:if="${error}">
                         <div class="col-md-12">
                             <p class="alert alert-danger" role="alert" th:text="${error}"></p>
                         </div>
