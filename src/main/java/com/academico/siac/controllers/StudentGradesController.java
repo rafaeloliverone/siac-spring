@@ -2,6 +2,7 @@ package com.academico.siac.controllers;
 
 import com.academico.siac.models.Student;
 import com.academico.siac.services.StudentService;
+import com.academico.siac.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,8 +16,12 @@ public class StudentGradesController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/list")
     public ModelAndView listView(ModelAndView mv) {
+        mv.addObject("user", userService.getUser());
         mv.addObject("students", studentService.getAllStudents());
         mv.addObject("student", new Student());
         mv.setViewName("grades/list");
@@ -25,6 +30,7 @@ public class StudentGradesController {
 
     @GetMapping("/update/{id}")
     public ModelAndView formGrade(@PathVariable Long id, ModelAndView mv) {
+        mv.addObject("user", userService.getUser());
         mv.addObject("student", studentService.findStudentById(id));
         mv.setViewName("grades/form");
         return mv;
@@ -32,6 +38,8 @@ public class StudentGradesController {
 
     @PostMapping("/update/{id}")
     public ModelAndView updateStudentGrade(@PathVariable Long id, Student student, BindingResult result, ModelAndView mv) {
+        mv.addObject("user", userService.getUser());
+
         if (result.hasErrors()) {
             mv.addObject("student", student);
             mv.setViewName("grades/form");
