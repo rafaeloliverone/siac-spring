@@ -19,15 +19,8 @@
                     </div>
 
                     <div class="mt-3 bg-dark text-light d-flex align-items-center flex-column p-5 border border-primary">
-                        <div class="w-100 mb-3">
-                            <label for="name">Nome:</label>
-                            <input id="name" type="text" maxlength=50 class="form-control" th:field="*{name}" readonly>
-                        </div>
-
-                        <div class="w-100">
-                            <label for="birthdate">Data de nascimento:</label>
-                            <input id="birthdate" type="date" class="form-control" placeholder="MM-dd-yyyy"
-                                   th:field="*{birthDate}" readonly>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <p style="font-size: 32px; font-weight: bold" th:text="*{name}"></p>
                         </div>
 
                         <div class="w-100 mb-3">
