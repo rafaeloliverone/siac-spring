@@ -9,7 +9,7 @@ public class HomeController {
     @GetMapping("/")
     public ModelAndView home() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("home/home");
+        mv.setViewName("account/login");
         mv.addObject("mensagem", "Mensagem do controller");
         return mv;
     }

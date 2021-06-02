@@ -8,10 +8,11 @@
         <link rel='stylesheet' href="/webjars/bootstrap/css/bootstrap.min.css">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link th:href="@{/style/main.css}" rel="stylesheet" />
     </head>
 
     <body>
-        <header th:fragment="header">
+        <header th:fragment="header(userEmail)">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand" href="/">SIAC</a>
 
@@ -38,7 +39,7 @@
                     </ul>
 
                     <div class="d-flex align-content-center">
-                        <p th:text="Teste" class="m-0 mr-2 text-light  align-self-center"></p>
+                        <p th:text="${userEmail}" class="m-0 mr-2 text-light  align-self-center"></p>
                         <a class="nav-link" href="/login">Sair</a>
                     </div>
                 </div>

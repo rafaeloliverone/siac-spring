@@ -2,6 +2,7 @@ package com.academico.siac.controllers;
 
 import com.academico.siac.models.Student;
 import com.academico.siac.services.StudentService;
+import com.academico.siac.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,13 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
+	@Autowired
+	private UserService userService;
+
 	//	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@GetMapping("/list")
 	public ModelAndView listView(ModelAndView mv) {
+		mv.addObject("user", userService.getUser());
 		mv.addObject("students", studentService.getAllStudents());
 		mv.setViewName("student/list");
 		return mv;
@@ -32,6 +37,7 @@ public class StudentController {
 
 	@GetMapping("/report")
 	public ModelAndView reportView(ModelAndView mv) {
+		mv.addObject("user", userService.getUser());
 		mv.addObject("students", studentService.getAllStudentsWithGrades());
 		mv.setViewName("student/report");
 
@@ -40,6 +46,7 @@ public class StudentController {
 
 	@GetMapping("/create")
 	public ModelAndView createView(ModelAndView mv) {
+		mv.addObject("user", userService.getUser());
 		mv.addObject("student", new Student());
 		mv.setViewName("student/form");
 		return mv;
@@ -47,7 +54,10 @@ public class StudentController {
 
 	@PostMapping("/save")
 	public ModelAndView saveOrUpdateStudent(@Valid Student student, BindingResult result, ModelAndView mv) {
-		if (result.hasErrors()) {
+		mv.addObject("user", userService.getUser());
+
+		if (result.hasErrors() || !studentService.isStudentValid(student)) {
+			mv.addObject("error", "Verifique as informações inseridas");
 			mv.addObject("student", new Student());
 			mv.setViewName("student/form");
 		} else {
@@ -64,8 +74,10 @@ public class StudentController {
 			@Valid Student student,
 			BindingResult result,
 			ModelAndView mv) {
+		mv.addObject("user", userService.getUser());
 
-		if (result.hasErrors()) {
+		if (result.hasErrors() || !studentService.isStudentValid(student)) {
+			mv.addObject("error", "Verifique as informações inseridas");
 			mv.addObject("student", student);
 			mv.setViewName("student/form");
 		} else {
@@ -79,6 +91,7 @@ public class StudentController {
 
 	@GetMapping("/update/{id}")
 	public ModelAndView updateView(@PathVariable("id") Long id, ModelAndView mv) {
+		mv.addObject("user", userService.getUser());
 		Student student = studentService.findStudentById(id);
 		mv.addObject("student", student);
 		mv.setViewName("student/form");

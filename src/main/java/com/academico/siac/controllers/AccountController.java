@@ -1,6 +1,6 @@
 package com.academico.siac.controllers;
 
-import com.academico.siac.models.Users;
+import com.academico.siac.models.User;
 import com.academico.siac.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,27 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(@Validated Users user, BindingResult result) {
+    public ModelAndView login(@Validated User user, BindingResult result) {
         ModelAndView mv = new ModelAndView();
 
-        Users usr = userService.encontrarPorEmail(user.getEmail());
+        User usr = userService.encontrarPorEmail(user.getEmail());
 
-        boolean checkPassword = BCrypt.checkpw(user.getPassword(), usr.getPassword());
-        boolean checkSameEmail = user.getEmail().equals(usr.getEmail());
+        if (usr != null) {
+            boolean checkPassword = BCrypt.checkpw(user.getPassword(), usr.getPassword());
+            boolean checkSameEmail = user.getEmail().equals(usr.getEmail());
 
-        if (checkPassword && checkSameEmail) {
-            mv.setViewName("redirect:/students/list");
-        } else {
-            mv.addObject("user", user);
-            mv.setViewName("account/login");
+            if (checkPassword && checkSameEmail) {
+                mv.setViewName("redirect:/students/list");
+            } else {
+                mv.addObject("user", user);
+                mv.setViewName("account/login");
+            }
+
+            return mv;
         }
+
+        mv.addObject("error", "Usuário não encontrado");
+        mv.setViewName("account/login");
 
         return mv;
     }
@@ -49,14 +56,14 @@ public class AccountController {
     public ModelAndView registration() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("account/register");
-        mv.addObject("user", new Users());
+        mv.addObject("user", new User());
         return mv;
     }
 
     @PostMapping("/registration")
-    public ModelAndView registration(@Validated Users user, BindingResult result) {
+    public ModelAndView registration(@Validated User user, BindingResult result) {
         ModelAndView mv = new ModelAndView();
-        Users usr = userService.encontrarPorEmail(user.getEmail());
+        User usr = userService.encontrarPorEmail(user.getEmail());
 
         if (usr != null) {
             result.rejectValue("email", "", "Usuário já cadastrado");

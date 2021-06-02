@@ -8,12 +8,19 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class StudentService {
 
     @Autowired StudentRepository studentRepository;
+
+    public Boolean isStudentValid(Student student) {
+        return !student.getName().isEmpty() &&
+                student.getBirthDate() != null &&
+                student.getBirthDate().before(new Date());
+    }
 
     public Student findStudentById(Long id) {
        return studentRepository.findById(id)
